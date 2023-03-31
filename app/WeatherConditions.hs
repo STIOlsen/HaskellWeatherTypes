@@ -2,28 +2,41 @@ module WeatherConditions where
 
 data Intencity = Light | Extreme | Heavy | Very | Ragged | Shower | Moderate | Freezing
 
-type Rain = [Intencity]
+data WeatherCondition
+  = Rain [Intencity]
+  | Drizzle [Intencity] (Maybe WeatherCondition)
+  | Snow [Intencity]
+  | Sleet [Intencity]
+  | Thunderstorm [Intencity] (Maybe WeatherCondition)
+  | Atmosphere AtmosphereType
+  | Clear ClearType
+  | Clouds CloudsType
 
-data Drizzle = Drizzle (Maybe Rain) [Intencity]
-
-data Snow = Snow [Intencity] | Sleet [Intencity]
-
-data Thunderstorm = ThunderstormRain [Intencity] Rain | ThunderstormDrizzle [Intencity] Drizzle
-
-data Atmosphere = Fog | Mist | Smoke | Haze | Dust | Sand | VolcanicAsh | Squall | Tornado | SandDustWhirls
+data AtmosphereType = Fog | Mist | Smoke | Haze | Dust | Sand | VolcanicAsh | Squall | Tornado | SandDustWhirls
   deriving (Show, Eq)
 
-data Clear = ClearSky
+data ClearType = ClearSky
   deriving (Show, Eq)
 
-data Clouds = Few | Scatterd | Broken | Overcast
+data CloudsType = Few | Scattered | Broken | Overcast
   deriving (Show, Eq)
 
-data WeatherConditions
-  = Rain Rain
-  | DrizzleCondition Drizzle
-  | SnowCondition Snow
-  | Thunderstorm Thunderstorm
-  | Atmosphere Atmosphere
-  | Clear Clear
-  | Clouds Clouds
+instance Show Intencity where
+  show Light = "light"
+  show Extreme = "extreme"
+  show Heavy = "heavy"
+  show Very = "very"
+  show Ragged = "ragged"
+  show Shower = "shower"
+  show Moderate = "moderate"
+  show Freezing = "freezing"
+
+instance Show WeatherCondition where
+  show (Rain intencities) = "(" ++ "Rain " ++ show intencities ++ ")"
+  show (Drizzle intencities weather) = "(" ++ "Drizzle " ++ show intencities ++ " (" ++ show weather ++ "))"
+  show (Snow intencities) = "(" ++ "Snow " ++ show intencities ++ ")"
+  show (Sleet intencities) = "(" ++ "Sleet " ++ show intencities ++ ")"
+  show (Thunderstorm intencities weather) = "(" ++ "Thunderstorm " ++ show intencities ++ " " ++ show weather ++ ")"
+  show (Atmosphere atmosphereType) = "(" ++ "Atmosphere " ++ show atmosphereType ++ ")"
+  show (Clear clearType) = "(" ++ "Clear " ++ show clearType ++ ")"
+  show (Clouds cloudsType) = "(" ++ "Clouds " ++ show cloudsType ++ ")"
