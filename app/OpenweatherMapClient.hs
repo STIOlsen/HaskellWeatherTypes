@@ -19,10 +19,14 @@ getWeather :: LocationReq -> IO (Maybe WeatherData)
 getWeather req = do
   let location = toLocation req
   response <- Web.OpenWeatherMap.Client.getWeather apiKey location
-  return $ either (const Nothing) (Just . currentWeatherToWeatherData) response
+  case response of
+    Left _ -> return Nothing
+    Right cw -> return $ Just $ currentWeatherToWeatherData cw
 
 getForecast :: LocationReq -> IO (Maybe [WeatherData])
 getForecast req = do
   let location = toLocation req
   response <- Web.OpenWeatherMap.Client.getForecast apiKey location
-  return $ either (const Nothing) (Just . forecastWeatherToWeatherDataList) response
+  case response of
+    Left _ -> return Nothing
+    Right fw -> return $ Just $ forecastWeatherToWeatherDataList fw

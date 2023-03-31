@@ -43,7 +43,7 @@ instance Show WeatherData where
       ++ "\n"
       ++ "Temperature: "
       ++ show temperature
-      ++ "°C\n"
+      ++ "\n"
       ++ "Humidity: "
       ++ show humidity
       ++ "%\n"

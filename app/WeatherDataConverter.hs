@@ -22,7 +22,7 @@ currentWeatherToWeatherData cw =
       forcastTime = Nothing,
       location = (lon, lat),
       country = OWSys.country $ OWCW.sys cw,
-      temperature = Temperature.Kelvin $ realToFrac $ OWMain.temp $ OWCW.main cw,
+      temperature = Temperature.Kelvin $ realToFrac (OWMain.temp $ OWCW.main cw),
       humidity = realToFrac $ round $ OWMain.humidity $ OWCW.main cw,
       pressure = realToFrac $ round $ OWMain.pressure $ OWCW.main cw,
       windSpeed = realToFrac $ OWWind.speed $ OWCW.wind cw,
@@ -56,7 +56,6 @@ forecastWeatherToWeatherDataList fw = map weatherDataForForecast (OWFW.list fw)
           weatherDescriptions = fmap (OWWeather.description) (OWF.weather w),
           weatherIcons = fmap (OWWeather.icon) (OWF.weather w)
         }
-      where
     coord = OWCity.coord $ OWFW.city fw
     lat = case OWCoord.lat coord of
       Just lat -> Just $ realToFrac lat
