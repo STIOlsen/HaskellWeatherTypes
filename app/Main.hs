@@ -5,6 +5,7 @@ module Main where
 
 import ApiKey (apiKey)
 import OpenweatherMapClient (LocationReq (..), getForecast, getWeather)
+import Parser (parseWeatherConditions)
 import System.IO (hFlush, stdout)
 import Temperature
 import WeatherData (WeatherData (..), averageTemperature)
@@ -28,17 +29,25 @@ main = do
   forcastIO <- getForecast request
   case weatherDataIO of
     Nothing -> putStrLn "Failed to fetch weather data."
-    Just wd -> print wd
+    Just wd -> do
+      print ("--------- Current weather -----------")
+      print wd
+
   case forcastIO of
     Nothing -> putStrLn "Failed to fetch forcast data."
-    Just f@(forcast : forcasts) -> do
+    Just forcasts -> do
+      print ("---------- Forcast (only the first one ) ----------")
+      print $ head forcasts
       print ("--------------------")
-      print ("Forcast:")
-      print $ forcast
-      print ("--------------------")
-      print ("Average Temperature:")
-      print $ length f
-      print $ averageTemperature f (Celsius 0)
+      print ("Average Temperature of Forcasts:")
+      print $ averageTemperature forcasts (Celsius 0)
+      parseWeatherConditions "rain"
+      parseWeatherConditions " rain    "
+      parseWeatherConditions "light rain"
+      parseWeatherConditions "heavy intensity drizzle rain"
+      parseWeatherConditions "shower rain and drizzle"
+      parseWeatherConditions "heavy shower rain and drizzle"
+      parseWeatherConditions "drizzle rain"
 
 byCityName :: IO LocationReq
 byCityName = do
