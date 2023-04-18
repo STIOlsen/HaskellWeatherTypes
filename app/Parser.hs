@@ -4,61 +4,35 @@ import Control.Monad (void)
 import Data.Void (Void)
 import Text.Megaparsec
 import Text.Megaparsec.Char
-import WeatherConditions (AtmosphereType (..), ClearType (..), CloudsType (..), Intencity (..), WeatherCondition (..))
+import WeatherConditions (WeatherCondition (..), atmosphereTypes, conditionTable)
 
 type Parser a = Parsec Void String a
 
-pIntencity :: Parser Intencity
-pIntencity =
-  do
-    choice
-      [ string "light" >> return Light,
-        string "extreme" >> return Extreme,
-        string "heavy" >> return Heavy,
-        string "very" >> return Very,
-        string "ragged" >> return Ragged,
-        string "shower" >> return Shower,
-        string "moderate" >> return Moderate,
-        string "freezing" >> return Freezing
-      ]
+pAtmosphere :: Parser WeatherCondition
+pAtmosphere = do
+  str <- try (manyTill anySingle (lookAhead (choice (string <$> atmosphereTypes))))
+  rest <- manyTill anySingle eof
+  return $ Atmosphere (str ++ rest)
 
-pRain :: Parser WeatherCondition
-pRain =
-  do
-    optional space
-    intencities <- many (try (space >> pIntencity))
-    _ <- space >> string "rain" >> optional space
-    optional space
-    return (Rain intencities)
-
-pDrizzle :: Parser WeatherCondition
-pDrizzle =
-  do
-    optional space
-    intencities <- many pIntencity
-    optional space
-    optional $ string "intensity"
-    optional space
-    _ <- string "drizzle"
-    optional space
-    isRain <- optional $ string "rain"
-    case isRain of
-      Just _ -> return (Drizzle intencities (Just (Rain [])))
-      Nothing -> return (Drizzle intencities Nothing)
-
-pRainAndDrizzle :: Parser WeatherCondition
-pRainAndDrizzle =
-  do
-    rain <- try pRain
-    optional space
-    _ <- try $ string "and"
-    optional space
-    return $ Drizzle [] (Just $ rain)
+pCondition :: String -> Parser WeatherCondition
+pCondition condition = do
+  str <- try (manyTill anySingle (lookAhead (string condition)))
+  rest <- manyTill anySingle eof
+  case lookup condition conditionTable of
+    Just constructor -> return $ constructor (str ++ rest)
+    Nothing -> fail $ "Unknown weather condition: " ++ condition
 
 pWeatherCondition :: Parser WeatherCondition
-pWeatherCondition = choice [try pRainAndDrizzle, try pDrizzle, try pRain]
+pWeatherCondition =
+  foldr (<|>) pAtmosphere $
+    map
+      pCondition
+      ["rain", "drizzle", "snow", "sleet", "thunderstorm", "clear", "clouds"]
 
-parseWeatherConditions :: String -> IO ()
-parseWeatherConditions input = case parse pWeatherCondition "" input of
-  Left err -> putStrLn $ errorBundlePretty err
-  Right result -> print result
+parseWeatherCondition :: String -> WeatherCondition
+parseWeatherCondition input = case parse pWeatherCondition "" input of
+  Left err -> error $ errorBundlePretty err
+  Right result -> result
+
+parseWeatherConditions :: [String] -> [WeatherCondition]
+parseWeatherConditions conditions = map parseWeatherCondition conditions

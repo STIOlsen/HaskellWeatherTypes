@@ -1,42 +1,48 @@
 module WeatherConditions where
 
-data Intencity = Light | Extreme | Heavy | Very | Ragged | Shower | Moderate | Freezing
-
 data WeatherCondition
-  = Rain [Intencity]
-  | Drizzle [Intencity] (Maybe WeatherCondition)
-  | Snow [Intencity]
-  | Sleet [Intencity]
-  | Thunderstorm [Intencity] (Maybe WeatherCondition)
-  | Atmosphere AtmosphereType
-  | Clear ClearType
-  | Clouds CloudsType
+  = Rain String
+  | Drizzle String
+  | Snow String
+  | Sleet String
+  | Thunderstorm String
+  | Atmosphere String
+  | Clear String
+  | Clouds String
+  deriving (Eq)
 
-data AtmosphereType = Fog | Mist | Smoke | Haze | Dust | Sand | VolcanicAsh | Squall | Tornado | SandDustWhirls
-  deriving (Show, Eq)
+atmosphereTypes :: [String]
+atmosphereTypes =
+  [ "mist",
+    "smoke",
+    "haze",
+    "sand",
+    "dust",
+    "fog",
+    "ash",
+    "squall",
+    "tornado"
+  ]
 
-data ClearType = ClearSky
-  deriving (Show, Eq)
+type ConditionConstructor = String -> WeatherCondition
 
-data CloudsType = Few | Scattered | Broken | Overcast
-  deriving (Show, Eq)
-
-instance Show Intencity where
-  show Light = "light"
-  show Extreme = "extreme"
-  show Heavy = "heavy"
-  show Very = "very"
-  show Ragged = "ragged"
-  show Shower = "shower"
-  show Moderate = "moderate"
-  show Freezing = "freezing"
+conditionTable :: [(String, ConditionConstructor)]
+conditionTable =
+  [ ("rain", Rain),
+    ("drizzle", Drizzle),
+    ("snow", Snow),
+    ("sleet", Sleet),
+    ("thunderstorm", Thunderstorm),
+    ("clear", Clear),
+    ("clouds", Clouds)
+  ]
 
 instance Show WeatherCondition where
-  show (Rain intencities) = "(" ++ "Rain " ++ show intencities ++ ")"
-  show (Drizzle intencities weather) = "(" ++ "Drizzle " ++ show intencities ++ " (" ++ show weather ++ "))"
-  show (Snow intencities) = "(" ++ "Snow " ++ show intencities ++ ")"
-  show (Sleet intencities) = "(" ++ "Sleet " ++ show intencities ++ ")"
-  show (Thunderstorm intencities weather) = "(" ++ "Thunderstorm " ++ show intencities ++ " " ++ show weather ++ ")"
-  show (Atmosphere atmosphereType) = "(" ++ "Atmosphere " ++ show atmosphereType ++ ")"
-  show (Clear clearType) = "(" ++ "Clear " ++ show clearType ++ ")"
-  show (Clouds cloudsType) = "(" ++ "Clouds " ++ show cloudsType ++ ")"
+  show (Rain str) = "Rain " ++ show str
+  show (Drizzle str) = "Drizzle " ++ show str
+  show (Snow str) = "Snow " ++ show str
+  show (Sleet str) = "Sleet " ++ show str
+  show (Thunderstorm str) = "Thunderstorm " ++ show str
+  show (Atmosphere str) = "Atmosphere " ++ show str
+  show (Clear str) = "Clear " ++ show str
+  show (Clouds str) = "Clouds " ++ show str

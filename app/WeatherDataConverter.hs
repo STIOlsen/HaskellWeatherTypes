@@ -2,6 +2,7 @@ module WeatherDataConverter (currentWeatherToWeatherData, forecastWeatherToWeath
 
 import Data.Time.Clock (UTCTime)
 import Data.Time.Clock.POSIX (posixSecondsToUTCTime)
+import Parser (parseWeatherConditions)
 import Temperature (Temperature (..), toCelsius)
 import WeatherData (WeatherData (..))
 import qualified Web.OpenWeatherMap.Types.City as OWCity (City (..))
@@ -27,7 +28,7 @@ currentWeatherToWeatherData cw =
       pressure = realToFrac $ round $ OWMain.pressure $ OWCW.main cw,
       windSpeed = realToFrac $ OWWind.speed $ OWCW.wind cw,
       windDirection = realToFrac $ round $ OWWind.deg $ OWCW.wind cw,
-      weatherDescriptions = fmap (OWWeather.description) (OWCW.weather cw),
+      weatherDescriptions = parseWeatherConditions $ fmap (OWWeather.description) (OWCW.weather cw),
       weatherIcons = fmap (OWWeather.icon) (OWCW.weather cw)
     }
   where
@@ -53,7 +54,7 @@ forecastWeatherToWeatherDataList fw = map weatherDataForForecast (OWFW.list fw)
           pressure = realToFrac $ round $ OWMain.pressure $ OWF.main w,
           windSpeed = realToFrac $ OWWind.speed $ OWF.wind w,
           windDirection = realToFrac $ round $ OWWind.deg $ OWF.wind w,
-          weatherDescriptions = fmap (OWWeather.description) (OWF.weather w),
+          weatherDescriptions = parseWeatherConditions $ fmap (OWWeather.description) (OWF.weather w),
           weatherIcons = fmap (OWWeather.icon) (OWF.weather w)
         }
     coord = OWCity.coord $ OWFW.city fw

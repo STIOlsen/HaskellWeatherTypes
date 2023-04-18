@@ -6,14 +6,10 @@ module WeatherData
   )
 where
 
-import Data.List (groupBy, intercalate)
-import Data.Time (UTCTime, defaultTimeLocale, formatTime, toGregorian, utctDay)
-import Data.Time.Calendar (Day, toGregorian)
-import Data.Time.Clock
-import Data.Time.Clock (UTCTime (..), utctDay)
+import Data.Time (UTCTime, defaultTimeLocale, formatTime, toGregorian)
 import Data.Time.LocalTime (TimeOfDay (..), TimeZone (..), getCurrentTimeZone, localTimeOfDay, timeZoneMinutes, utcToLocalTime)
 import Temperature (Temperature (..), toCelsius, toFahrenheit, toKelvin)
-import Text.Printf (printf)
+import WeatherConditions (WeatherCondition)
 
 data WeatherData = WeatherData
   { date :: UTCTime,
@@ -25,7 +21,7 @@ data WeatherData = WeatherData
     pressure :: Float,
     windSpeed :: Float,
     windDirection :: Float,
-    weatherDescriptions :: [String],
+    weatherDescriptions :: [WeatherCondition],
     weatherIcons :: [String]
   }
 

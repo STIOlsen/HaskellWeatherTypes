@@ -5,16 +5,18 @@ module Main where
 
 import ApiKey (apiKey)
 import OpenweatherMapClient (LocationReq (..), getForecast, getWeather)
-import Parser (parseWeatherConditions)
+import Parser (pWeatherCondition, parseWeatherConditions)
 import System.IO (hFlush, stdout)
 import Temperature
+import Text.Megaparsec (parse)
+import WeatherConditions (WeatherCondition (..))
 import WeatherData (WeatherData (..), averageTemperature)
 
 main :: IO ()
 main = do
   putStrLn "How would you like to look up the weather?"
   putStrLn "1. By city name"
-  putStrLn "3. By coordinates"
+  putStrLn "2. By coordinates"
   putStr "Enter the number corresponding to your choice: "
   hFlush stdout -- Ensure the prompt is displayed before waiting for input
   choice <- getLine
@@ -41,13 +43,6 @@ main = do
       print ("--------------------")
       print ("Average Temperature of Forcasts:")
       print $ averageTemperature forcasts (Celsius 0)
-      parseWeatherConditions "rain"
-      parseWeatherConditions " rain    "
-      parseWeatherConditions "light rain"
-      parseWeatherConditions "heavy intensity drizzle rain"
-      parseWeatherConditions "shower rain and drizzle"
-      parseWeatherConditions "heavy shower rain and drizzle"
-      parseWeatherConditions "drizzle rain"
 
 byCityName :: IO LocationReq
 byCityName = do
