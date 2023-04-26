@@ -2,6 +2,7 @@ module WeatherDataConverter (currentWeatherToWeatherData, forecastWeatherToWeath
 
 import Data.Time.Clock (UTCTime)
 import Data.Time.Clock.POSIX (posixSecondsToUTCTime)
+import Data.Time.LocalTime (TimeZone (..))
 import Parser (parseWeatherConditions)
 import Temperature (Temperature (..), toCelsius)
 import WeatherData (WeatherData (..))
@@ -16,11 +17,12 @@ import qualified Web.OpenWeatherMap.Types.Sys as OWSys (Sys (..))
 import qualified Web.OpenWeatherMap.Types.Weather as OWWeather (Weather (..))
 import qualified Web.OpenWeatherMap.Types.Wind as OWWind (Wind (..))
 
-currentWeatherToWeatherData :: OWCW.CurrentWeather -> WeatherData
-currentWeatherToWeatherData cw =
+currentWeatherToWeatherData :: OWCW.CurrentWeather -> TimeZone -> WeatherData
+currentWeatherToWeatherData cw tz =
   WeatherData
     { date = epochIntToUTCTime $ OWCW.dt cw,
       forcastTime = Nothing,
+      timeZone = tz,
       location = (lon, lat),
       country = OWSys.country $ OWCW.sys cw,
       temperature = Temperature.Kelvin $ realToFrac (OWMain.temp $ OWCW.main cw),
@@ -40,13 +42,14 @@ currentWeatherToWeatherData cw =
       Just lon -> Just $ realToFrac lon
       Nothing -> Nothing
 
-forecastWeatherToWeatherDataList :: OWFW.ForecastWeather -> [WeatherData]
-forecastWeatherToWeatherDataList fw = map weatherDataForForecast (OWFW.list fw)
+forecastWeatherToWeatherDataList :: OWFW.ForecastWeather -> TimeZone -> [WeatherData]
+forecastWeatherToWeatherDataList fw tz = map weatherDataForForecast (OWFW.list fw)
   where
     weatherDataForForecast w =
       WeatherData
         { date = epochIntToUTCTime $ OWF.dt w,
           forcastTime = Just $ epochIntToUTCTime $ OWF.dt w,
+          timeZone = tz,
           location = (lon, lat),
           country = Nothing,
           temperature = Temperature.Kelvin $ realToFrac $ OWMain.temp $ OWF.main w,

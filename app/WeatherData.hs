@@ -1,19 +1,15 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module WeatherData
-  ( WeatherData (..),
-    averageTemperature,
-  )
-where
+module WeatherData where
 
-import Data.Time (UTCTime, defaultTimeLocale, formatTime, toGregorian)
-import Data.Time.LocalTime (TimeOfDay (..), TimeZone (..), getCurrentTimeZone, localTimeOfDay, timeZoneMinutes, utcToLocalTime)
-import Temperature (Temperature (..), toCelsius, toFahrenheit, toKelvin)
+import Data.Time (TimeZone, UTCTime)
+import Temperature (Temperature)
 import WeatherConditions (WeatherCondition)
 
 data WeatherData = WeatherData
   { date :: UTCTime,
     forcastTime :: Maybe UTCTime,
+    timeZone :: TimeZone,
     location :: (Maybe Float, Maybe Float),
     country :: Maybe String,
     temperature :: Temperature,
@@ -26,45 +22,17 @@ data WeatherData = WeatherData
   }
 
 instance Show WeatherData where
-  show (WeatherData {..}) =
-    "Date: " ++ show date ++ "\n"
-      ++ "Forcast Time: "
-      ++ maybe "N/A" show forcastTime
-      ++ "\n"
-      ++ "Location: "
-      ++ show location
-      ++ "\n"
-      ++ "Country: "
-      ++ maybe "N/A" id country
-      ++ "\n"
-      ++ "Temperature: "
-      ++ show temperature
-      ++ "\n"
-      ++ "Humidity: "
-      ++ show humidity
-      ++ "%\n"
-      ++ "Pressure: "
-      ++ show pressure
-      ++ "hPa\n"
-      ++ "Wind Speed: "
-      ++ show windSpeed
-      ++ "m/s\n"
-      ++ "Wind Direction: "
-      ++ show windDirection
-      ++ "°\n"
-      ++ "Weather Descriptions: "
-      ++ show weatherDescriptions
-      ++ "\n"
-      ++ "Weather Icons: "
-      ++ show weatherIcons
-      ++ "\n"
-
-averageTemperature :: [WeatherData] -> Temperature -> Temperature
-averageTemperature [] _ = error "No weather data"
-averageTemperature weatherData unit = case unit of
-  (Celsius _) -> toCelsius average
-  (Kelvin _) -> toKelvin average
-  (Fahrenheit _) -> toFahrenheit average
-  where
-    average = totalSum / fromIntegral (length weatherData)
-    totalSum = sum (map (toCelsius . temperature) weatherData)
+  show WeatherData {..} =
+    unlines
+      [ "Date: " ++ show date,
+        "Forcast Time: " ++ maybe "N/A" show forcastTime,
+        "Location: " ++ show location,
+        "Country: " ++ maybe "N/A" id country,
+        "Temperature: " ++ show temperature,
+        "Humidity: " ++ show humidity ++ "%",
+        "Pressure: " ++ show pressure ++ "hPa",
+        "Wind Speed: " ++ show windSpeed ++ "m/s",
+        "Wind Direction: " ++ show windDirection ++ "°",
+        "Weather Descriptions: " ++ show weatherDescriptions,
+        "Weather Icons: " ++ show weatherIcons
+      ]

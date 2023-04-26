@@ -24,10 +24,10 @@ pCondition condition = do
 
 pWeatherCondition :: Parser WeatherCondition
 pWeatherCondition =
-  foldr (<|>) pAtmosphere $
-    map
-      pCondition
-      ["rain", "drizzle", "snow", "sleet", "thunderstorm", "clear", "clouds"]
+  foldr
+    ((<|>) . pCondition)
+    pAtmosphere
+    ["rain", "drizzle", "snow", "sleet", "thunderstorm", "clear", "clouds"]
 
 parseWeatherCondition :: String -> WeatherCondition
 parseWeatherCondition input = case parse pWeatherCondition "" input of
@@ -35,4 +35,4 @@ parseWeatherCondition input = case parse pWeatherCondition "" input of
   Right result -> result
 
 parseWeatherConditions :: [String] -> [WeatherCondition]
-parseWeatherConditions conditions = map parseWeatherCondition conditions
+parseWeatherConditions = map parseWeatherCondition

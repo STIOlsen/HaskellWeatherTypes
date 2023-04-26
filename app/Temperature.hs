@@ -1,39 +1,45 @@
-module Temperature
-  ( Temperature (..),
-    toCelsius,
-    toKelvin,
-    toFahrenheit,
-  )
-where
+module Temperature where
+
+type Celsius = Float
+
+type Kelvin = Float
+
+type Fahrenheit = Float
 
 data Temperature
-  = Celsius Float
-  | Kelvin Float
-  | Fahrenheit Float
-  deriving (Eq)
+  = Celsius Celsius
+  | Kelvin Kelvin
+  | Fahrenheit Fahrenheit
+  deriving (Eq, Ord)
 
 instance Show Temperature where
   show (Celsius t) = show t ++ " °C"
   show (Kelvin t) = show t ++ " K"
   show (Fahrenheit t) = show t ++ " °F"
 
-instance Num Temperature where
-  (Celsius t1) + (Celsius t2) = Celsius (t1 + t2)
-  (Kelvin t1) + (Kelvin t2) = Kelvin (t1 + t2)
-  (Fahrenheit t1) + (Fahrenheit t2) = Fahrenheit (t1 + t2)
-  (Celsius t1) - (Celsius t2) = Celsius (t1 - t2)
-  (Kelvin t1) - (Kelvin t2) = Kelvin (t1 - t2)
-  (Fahrenheit t1) - (Fahrenheit t2) = Fahrenheit (t1 - t2)
-  (Celsius t1) * (Celsius t2) = Celsius (t1 * t2)
-  (Kelvin t1) * (Kelvin t2) = Kelvin (t1 * t2)
-  (Fahrenheit t1) * (Fahrenheit t2) = Fahrenheit (t1 * t2)
+fromCelsius :: Celsius -> Temperature
+fromCelsius = Celsius
 
-  fromInteger t = Celsius (fromInteger t)
+fromKelvin :: Kelvin -> Temperature
+fromKelvin = Kelvin
 
-instance Fractional Temperature where
-  (Celsius t1) / (Celsius t2) = Celsius (t1 / t2)
-  (Kelvin t1) / (Kelvin t2) = Kelvin (t1 / t2)
-  (Fahrenheit t1) / (Fahrenheit t2) = Fahrenheit (t1 / t2)
+fromFahrenheit :: Fahrenheit -> Temperature
+fromFahrenheit = Fahrenheit
+
+getCelsius :: Temperature -> Celsius
+getCelsius (Celsius t) = t
+getCelsius (Kelvin t) = t - 273.15
+getCelsius (Fahrenheit t) = (t - 32) * 5 / 9
+
+getKelvin :: Temperature -> Kelvin
+getKelvin (Celsius t) = t + 273.15
+getKelvin (Kelvin t) = t
+getKelvin (Fahrenheit t) = (t + 459.67) * 5 / 9
+
+getFahrenheit :: Temperature -> Fahrenheit
+getFahrenheit (Celsius t) = t * 9 / 5 + 32
+getFahrenheit (Kelvin t) = t * 9 / 5 - 459.67
+getFahrenheit (Fahrenheit t) = t
 
 toCelsius :: Temperature -> Temperature
 toCelsius (Celsius t) = Celsius t
@@ -46,6 +52,17 @@ toKelvin (Kelvin t) = Kelvin t
 toKelvin (Fahrenheit t) = Kelvin ((t + 459.67) * 5 / 9)
 
 toFahrenheit :: Temperature -> Temperature
-toFahrenheit (Celsius t) = Fahrenheit ((t * 9 / 5) + 32)
-toFahrenheit (Kelvin t) = Fahrenheit ((t * 9 / 5) - 459.67)
+toFahrenheit (Celsius t) = Fahrenheit (t * 9 / 5 + 32)
+toFahrenheit (Kelvin t) = Fahrenheit (t * 9 / 5 - 459.67)
 toFahrenheit (Fahrenheit t) = Fahrenheit t
+
+convertTemperature :: Temperature -> Temperature -> Temperature
+convertTemperature (Celsius _) t = t
+convertTemperature (Kelvin _) t = toKelvin t
+convertTemperature (Fahrenheit _) t = toFahrenheit t
+
+subtractTemperature :: Temperature -> Temperature -> Temperature
+subtractTemperature t1 t2 = convertTemperature t1 (Celsius (getCelsius t1 - getCelsius t2))
+
+addTemperature :: Temperature -> Temperature -> Temperature
+addTemperature t1 t2 = convertTemperature t1 (Celsius (getCelsius t1 + getCelsius t2))
