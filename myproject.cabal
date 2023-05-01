@@ -22,7 +22,7 @@ maintainer:         you@example.com
 extra-source-files: CHANGELOG.md
 
 executable myproject 
-    other-modules: ApiKey,WeatherDataConverter,WeatherData,WeatherDataUtils,Temperature, OpenweatherMapClient,Utils,WeatherConditions,Parser
+    other-modules: ApiKey,WeatherDataConverter,WeatherData,WeatherDataUtils,Temperature, OpenweatherMapClient,Utils,WeatherConditions,Parser,UmbrellaCondition
     main-is:          Main.hs
 
     -- Modules included in this executable, other than Main.
@@ -32,7 +32,7 @@ executable myproject
     -- other-extensions:
     build-depends:    base,
                     openweathermap,
-                    megaparsec,unix-time,time,text,containers
+                    megaparsec,unix-time,time
 
     hs-source-dirs:   app
     default-language: Haskell2010

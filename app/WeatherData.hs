@@ -8,7 +8,6 @@ import WeatherConditions (WeatherCondition)
 
 data WeatherData = WeatherData
   { date :: UTCTime,
-    forcastTime :: Maybe UTCTime,
     timeZone :: TimeZone,
     location :: (Maybe Float, Maybe Float),
     country :: Maybe String,
@@ -25,7 +24,6 @@ instance Show WeatherData where
   show WeatherData {..} =
     unlines
       [ "Date: " ++ show date,
-        "Forcast Time: " ++ maybe "N/A" show forcastTime,
         "Location: " ++ show location,
         "Country: " ++ maybe "N/A" id country,
         "Temperature: " ++ show temperature,

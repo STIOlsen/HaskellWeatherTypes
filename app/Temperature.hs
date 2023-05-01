@@ -13,9 +13,9 @@ data Temperature
   deriving (Eq, Ord)
 
 instance Show Temperature where
-  show (Celsius t) = show t ++ " °C"
-  show (Kelvin t) = show t ++ " K"
-  show (Fahrenheit t) = show t ++ " °F"
+  show (Celsius t) = show (roundToTwoDecimalPlaces t) ++ " °C"
+  show (Kelvin t) = show (roundToTwoDecimalPlaces t) ++ " K"
+  show (Fahrenheit t) = show (roundToTwoDecimalPlaces t) ++ " °F"
 
 fromCelsius :: Celsius -> Temperature
 fromCelsius = Celsius
@@ -27,19 +27,19 @@ fromFahrenheit :: Fahrenheit -> Temperature
 fromFahrenheit = Fahrenheit
 
 getCelsius :: Temperature -> Celsius
-getCelsius (Celsius t) = t
-getCelsius (Kelvin t) = t - 273.15
-getCelsius (Fahrenheit t) = (t - 32) * 5 / 9
+getCelsius (Celsius t) = roundToTwoDecimalPlaces t
+getCelsius (Kelvin t) = roundToTwoDecimalPlaces (t - 273.15)
+getCelsius (Fahrenheit t) = roundToTwoDecimalPlaces ((t - 32) * 5 / 9)
 
 getKelvin :: Temperature -> Kelvin
-getKelvin (Celsius t) = t + 273.15
-getKelvin (Kelvin t) = t
-getKelvin (Fahrenheit t) = (t + 459.67) * 5 / 9
+getKelvin (Celsius t) = roundToTwoDecimalPlaces (t + 273.15)
+getKelvin (Kelvin t) = roundToTwoDecimalPlaces t
+getKelvin (Fahrenheit t) = roundToTwoDecimalPlaces ((t + 459.67) * 5 / 9)
 
 getFahrenheit :: Temperature -> Fahrenheit
-getFahrenheit (Celsius t) = t * 9 / 5 + 32
-getFahrenheit (Kelvin t) = t * 9 / 5 - 459.67
-getFahrenheit (Fahrenheit t) = t
+getFahrenheit (Celsius t) = roundToTwoDecimalPlaces (t * 9 / 5 + 32)
+getFahrenheit (Kelvin t) = roundToTwoDecimalPlaces (t * 9 / 5 - 459.67)
+getFahrenheit (Fahrenheit t) = roundToTwoDecimalPlaces t
 
 toCelsius :: Temperature -> Temperature
 toCelsius (Celsius t) = Celsius t
@@ -66,3 +66,6 @@ subtractTemperature t1 t2 = convertTemperature t1 (Celsius (getCelsius t1 - getC
 
 addTemperature :: Temperature -> Temperature -> Temperature
 addTemperature t1 t2 = convertTemperature t1 (Celsius (getCelsius t1 + getCelsius t2))
+
+roundToTwoDecimalPlaces :: Float -> Float
+roundToTwoDecimalPlaces x = fromIntegral (round $ x * 100) / 100

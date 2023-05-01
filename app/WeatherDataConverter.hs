@@ -4,7 +4,7 @@ import Data.Time.Clock (UTCTime)
 import Data.Time.Clock.POSIX (posixSecondsToUTCTime)
 import Data.Time.LocalTime (TimeZone (..))
 import Parser (parseWeatherConditions)
-import Temperature (Temperature (..), toCelsius)
+import Temperature (Temperature (..), getCelsius, toCelsius)
 import WeatherData (WeatherData (..))
 import qualified Web.OpenWeatherMap.Types.City as OWCity (City (..))
 import qualified Web.OpenWeatherMap.Types.Coord as OWCoord (Coord (..))
@@ -21,11 +21,10 @@ currentWeatherToWeatherData :: OWCW.CurrentWeather -> TimeZone -> WeatherData
 currentWeatherToWeatherData cw tz =
   WeatherData
     { date = epochIntToUTCTime $ OWCW.dt cw,
-      forcastTime = Nothing,
       timeZone = tz,
       location = (lon, lat),
       country = OWSys.country $ OWCW.sys cw,
-      temperature = Temperature.Kelvin $ realToFrac (OWMain.temp $ OWCW.main cw),
+      temperature = Temperature.toCelsius $ Temperature.Kelvin $ realToFrac (OWMain.temp $ OWCW.main cw),
       humidity = realToFrac $ round $ OWMain.humidity $ OWCW.main cw,
       pressure = realToFrac $ round $ OWMain.pressure $ OWCW.main cw,
       windSpeed = realToFrac $ OWWind.speed $ OWCW.wind cw,
@@ -48,11 +47,10 @@ forecastWeatherToWeatherDataList fw tz = map weatherDataForForecast (OWFW.list f
     weatherDataForForecast w =
       WeatherData
         { date = epochIntToUTCTime $ OWF.dt w,
-          forcastTime = Just $ epochIntToUTCTime $ OWF.dt w,
           timeZone = tz,
           location = (lon, lat),
           country = Nothing,
-          temperature = Temperature.Kelvin $ realToFrac $ OWMain.temp $ OWF.main w,
+          temperature = Temperature.toCelsius $ Temperature.Kelvin $ realToFrac $ OWMain.temp $ OWF.main w,
           humidity = realToFrac $ round $ OWMain.humidity $ OWF.main w,
           pressure = realToFrac $ round $ OWMain.pressure $ OWF.main w,
           windSpeed = realToFrac $ OWWind.speed $ OWF.wind w,

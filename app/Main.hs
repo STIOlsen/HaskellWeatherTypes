@@ -12,6 +12,7 @@ import Parser (pWeatherCondition, parseWeatherConditions)
 import System.IO (hFlush, stdout)
 import Temperature
 import Text.Megaparsec (parse)
+import UmbrellaCondition (UmbrellaCondition (..), umbrellaCondition, umbrellaConditions)
 import WeatherConditions (WeatherCondition (..))
 import WeatherData (WeatherData (..))
 import WeatherDataUtils
@@ -39,6 +40,8 @@ main =
       Just wd -> do
         print ("--------- Current weather -----------")
         print wd
+        putStrLn ("umbrella recomendation:")
+        print $ umbrellaCondition wd
 
     case forcastIO of
       Nothing -> putStrLn "Failed to fetch forcast data."
@@ -54,6 +57,12 @@ main =
         print $ maxHumidity forcasts
         print ("Get day hourly forcast:")
         print $ getAverageTemperatures forcasts
+        print ("--------------------")
+        print ("Get day by day forcast:")
+        print $ getDayByDayForecasts forcasts
+        print ("--------------------")
+        print ("Umbrella recomendation:")
+        print $ map (\(date, wds) -> (date, umbrellaConditions wds)) (getDayByDayForecasts forcasts)
 
 byCityName :: IO LocationReq
 byCityName = do

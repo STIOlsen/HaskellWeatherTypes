@@ -5,6 +5,9 @@ module WeatherDataUtils
     windSpeedRange,
     maxHumidity,
     getAverageTemperatures,
+    getDayByDayForecasts,
+    getDayHourlyForecasts,
+    getHour,
   )
 where
 
@@ -14,14 +17,11 @@ import Data.Time.Clock
 import Temperature (Temperature (..), convertTemperature, getCelsius, toCelsius)
 import WeatherData (WeatherData (..))
 
-roundToTwoDecimalPlaces :: Float -> Float
-roundToTwoDecimalPlaces x = fromIntegral (round $ x * 100) / 100
-
 averageTemperature :: [WeatherData] -> Temperature -> Temperature
 averageTemperature [] _ = error "No weather data"
 averageTemperature weatherData unit = convertTemperature unit averageCelcius
   where
-    averageCelcius = Celsius $ roundToTwoDecimalPlaces (sumCelsius / fromIntegral (length weatherData))
+    averageCelcius = Celsius (sumCelsius / fromIntegral (length weatherData))
     temperatures = map temperature weatherData
     sumCelsius = sum (map (getCelsius . toCelsius) temperatures)
 
