@@ -20,7 +20,7 @@ main =
         putStrLn "Umberella recomendation for today:"
         print $ umbrellaCondition current
         putStrLn ""
-        putStrLn "Average Temperature of Forcasts:"
+        putStrLn "Average Temperature of forcasts:"
         print $ averageTemperature forcasts (Celsius 0)
         putStrLn ""
         putStrLn "Wind Speed Range of forcast:"
