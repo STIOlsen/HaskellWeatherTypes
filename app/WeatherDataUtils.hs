@@ -1,22 +1,15 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module WeatherDataUtils
-  ( averageTemperature,
-    windSpeedRange,
-    maxHumidity,
-    getAverageTemperatures,
-    getDayByDayForecasts,
-    getDayHourlyForecasts,
-    getHour,
-  )
-where
+module WeatherDataUtils where
 
 import Data.List (groupBy, sort, sortOn)
 import Data.Time (Day, UTCTime, defaultTimeLocale, formatTime, localDay, localTimeOfDay, toGregorian, todHour, utcToLocalTime, utctDayTime)
-import Data.Time.Clock
+import Data.Time.Clock ()
 import Temperature (Temperature (..), convertTemperature, getCelsius, toCelsius)
 import WeatherData (WeatherData (..))
 
+-- | Calculates the average temperature from a list of WeatherData
+-- | The average temperature is returned in the specified unit
 averageTemperature :: [WeatherData] -> Temperature -> Temperature
 averageTemperature [] _ = error "No weather data"
 averageTemperature weatherData unit = convertTemperature unit averageCelcius
@@ -25,11 +18,7 @@ averageTemperature weatherData unit = convertTemperature unit averageCelcius
     temperatures = map temperature weatherData
     sumCelsius = sum (map (getCelsius . toCelsius) temperatures)
 
-getAverageTemperatures :: [WeatherData] -> [(String, [(Int, Temperature)])]
-getAverageTemperatures forcasts =
-  let dayHourlyForecasts = getDayHourlyForecasts forcasts
-   in map (\(date, ws) -> (date, map (\(hour, hws) -> (hour, averageTemperature hws (Celsius 0))) ws)) dayHourlyForecasts
-
+-- | Calculates windpeed range from a list of WeatherData
 windSpeedRange :: [WeatherData] -> (Float, Float)
 windSpeedRange [] = error "No weather data"
 windSpeedRange weatherData =
@@ -38,6 +27,7 @@ windSpeedRange weatherData =
       maxWindSpeed = maximum windSpeeds
    in (minWindSpeed, maxWindSpeed)
 
+-- | Maximum humidity from a list of WeatherData
 maxHumidity :: [WeatherData] -> Float
 maxHumidity [] = error "No weather data"
 maxHumidity weatherData =
@@ -45,6 +35,8 @@ maxHumidity weatherData =
    in maximum humidities
 
 type Hour = Int
+
+type HourRange = (Hour, Hour)
 
 type Date = String
 

@@ -17,6 +17,7 @@ import qualified Web.OpenWeatherMap.Types.Sys as OWSys (Sys (..))
 import qualified Web.OpenWeatherMap.Types.Weather as OWWeather (Weather (..))
 import qualified Web.OpenWeatherMap.Types.Wind as OWWind (Wind (..))
 
+-- | Converts OpenWeatherMap CurrentWeather to WeatherData
 currentWeatherToWeatherData :: OWCW.CurrentWeather -> TimeZone -> WeatherData
 currentWeatherToWeatherData cw tz =
   WeatherData
@@ -41,6 +42,7 @@ currentWeatherToWeatherData cw tz =
       Just lon -> Just $ realToFrac lon
       Nothing -> Nothing
 
+-- | Converts OpenWeatherMap ForecastWeather to WeatherData list
 forecastWeatherToWeatherDataList :: OWFW.ForecastWeather -> TimeZone -> [WeatherData]
 forecastWeatherToWeatherDataList fw tz = map weatherDataForForecast (OWFW.list fw)
   where
@@ -66,5 +68,6 @@ forecastWeatherToWeatherDataList fw tz = map weatherDataForForecast (OWFW.list f
       Just lon -> Just $ realToFrac lon
       Nothing -> Nothing
 
+-- | Converts epoch time to UTCTime
 epochIntToUTCTime :: Int -> UTCTime
 epochIntToUTCTime epochTime = posixSecondsToUTCTime $ realToFrac epochTime
