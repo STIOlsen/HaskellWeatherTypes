@@ -59,7 +59,7 @@ forecastUmbrellaConditions forecasts =
 -- | Condenses a list of hourly umbrella conditions into a list of hourly ranges and umbrella conditions
 condenseUmbrellaConditionsbyHourRange :: [(Hour, UmbrellaCondition)] -> [(HourRange, UmbrellaCondition)]
 condenseUmbrellaConditionsbyHourRange [] = []
-condenseUmbrellaConditionsbyHourRange [(hour, umbrellaCond)] = [((hour, hour), umbrellaCond)]
+condenseUmbrellaConditionsbyHourRange [(hour, umbrellaCond)] = [((hour, hour + 1), umbrellaCond)]
 condenseUmbrellaConditionsbyHourRange ((hour, umbrellaCondition) : (hour_2, umreallaCond_2) : rest) =
   if recommendation umbrellaCondition == recommendation umreallaCond_2
     then condenseUmbrellaConditionsbyHourRange ((hour, umbrellaCondition) : rest)
