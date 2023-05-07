@@ -1,21 +1,22 @@
-# Report on project HaskellWeatherTypes
+# Report on Project HaskellWeatherTypes
+
+This project uses various abstractions to model and manipulate weather data. This project fetch weather data from the [OpenWeatherMap API](https://openweathermap.org/api) through the haskell library [openweathermap](https://hackage.haskell.org/package/openweathermap-0.3.0) and transform that data into a variety of useful formats.
 
 #### Table of Content
 
-1. [Description of the program](#description-of-the-program)
+**1.** [Description of the program](#description-of-the-program)
 
-   - [Program overview](#program-overview)
+- [Program overview](#program-overview)
 
-2. [Description of the Functional Techniques](#description-of-the-functional-techniques)
+**2.** [Description of the Functional Techniques](#description-of-the-functional-techniques)
 
-   - [Abstraction and Algebraic Data types](#abstraction-and-algebraic-data-types)
-   - [Monadic Parser](#monadic-parser)
-   - [General Functional Techniques](#general-functional-techniques)
+- [Abstraction and Algebraic Data types](#abstraction-and-algebraic-data-types)
+- [Monadic Parser](#monadic-parser)
+- [General Functional Techniques](#general-functional-techniques)
 
-3. [Evaluation of the Techniques](#evaluation-of-the-techniques)
-4. [Comparing Finished Project to Original Project Proposal](#comparing-finished-project-to-original-project-proposal)
+**3.** [Evaluation of the Techniques](#evaluation-of-the-techniques)
 
-This project uses various abstractions to model and manipulate weather data. This project fetch weather data from the [OpenWeatherMap API](https://openweathermap.org/api) through the haskell library [openweathermap](https://hackage.haskell.org/package/openweathermap-0.3.0) and transform that data into a variety of useful formats.
+**4.** [Comparing Finished Project to Original Project Proposal](#comparing-finished-project-to-original-project-proposal)
 
 ### <a id="description-of-the-program"></a> Description of the program
 
@@ -67,7 +68,7 @@ Parsing the weather conditions strings has been a challenging task, and differen
 **IO monad**, sequence and handels effects of input/output.
 **Maybe**, way of handling errors and unexpected cases in a safe and composable manner.
 
-#### <a id="evaluation-of-the-techniques"></a> Evaluation of the Techniques
+### <a id="evaluation-of-the-techniques"></a> Evaluation of the Techniques
 
 Using abstraction and algebraic data types proved to be a powerful techique for this project. By defining WeatherData and WeatherCondition, i was able to manipulate different weather parameters and conditions in a modular and flexible way. Making it easier to add new features or modify existing ones without having to change large sections of code.
 
