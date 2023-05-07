@@ -58,7 +58,8 @@ The application will then display the current weather
 
 ##### Example
 
-```haksellHow would you like to look up the weather?
+```
+How would you like to look up the weather?
 1. By city name
 2. By coordinates
 Enter the number corresponding to your choice: 1
@@ -69,18 +70,18 @@ Umberella recomendation for today:
 No umbrella needed.
 
 Average Temperature of forcasts:
-9.48 °C
+10.02 °C
 
-Wind Speed Range of forcast:
-(0.5,7.15)
+Wind Speed Range of forcast in m/s:
+(0.78,4.72)
 
 Umbrella recomendation forward :
-("2023-05-05",[])
-("2023-05-06",[])
 ("2023-05-07",[])
-("2023-05-08",[])
-("2023-05-09",[((8,8),Bring an umbrella.)])
-("2023-05-10",[((2,2),Bring an umbrella.)])
+("2023-05-08",[((14,17),Bring an umbrella, but be aware of winds.),((17,18),Bring an umbrella.)])
+("2023-05-09",[((2,5),Bring an umbrella.),((5,14),Bring an umbrella, but be aware of winds.),((14,15),Bring an umbrella.)])
+("2023-05-10",[((2,3),Bring an umbrella.)])
+("2023-05-11",[((2,3),Bring an umbrella.)])
+("2023-05-12",[((2,3),Bring an umbrella.)])
 ```
 
 ## Progress

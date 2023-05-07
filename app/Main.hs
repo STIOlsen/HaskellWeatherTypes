@@ -23,7 +23,7 @@ main =
         putStrLn "Average Temperature of forcasts:"
         print $ averageTemperature forcasts (Celsius 0)
         putStrLn ""
-        putStrLn "Wind Speed Range of forcast:"
+        putStrLn "Wind Speed Range of forcast in m/s:"
         print $ windSpeedRange forcasts
         putStrLn ""
         putStrLn "Umbrella recomendation forward :"
